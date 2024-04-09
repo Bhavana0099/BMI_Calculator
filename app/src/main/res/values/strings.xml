@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">BMI Calculator</string>
+    <string name="bmi_calculator">BMI Calculator</string>
+    <string name="male">Male</string>
+    <string name="weight_kg">Weight (kg)</string>
+    <string name="height_cm">Height (cm)</string>
+    <string name="_00">00</string>
+    <string name="clear_weight">Clear Weight</string>
+    <string name="clear_height">Clear Height</string>
+    <string name="copy_weight">Copy Weight</string>
+    <string name="copy_height">Copy Height</string>
+    <string name="calculate_your_bmi">Calculate your BMI</string>
+    <string name="your_bmi">Your BMI</string>
+    <string name="calculate_bmi_again">Calculate BMI Again</string>
+    <string name="settings">Settings</string>
+    <string name="pref_title_theme">Dark theme</string>
+    <string name="bmi_info">BMI Information</string>
+    <string name="info">Body mass index (BMI) is a screening tool that estimates body fat based on a person weight and height. BMI is calculated by dividing weight in kilograms by height in meters squared.</string>
+    <string name="info1">The CDC uses the following categories to interpret BMI for adults:</string>
+    <string name="info2">Underweight: below 18</string>
+    <string name="info3">Healthy weight: 18.5–24.9</string>
+    <string name="info4">Overweight: 25.0–29.9</string>
+    <string name="info5">Obesity: 30.0 and above</string>
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+</resources>

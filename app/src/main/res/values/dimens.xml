@@ -1,0 +1,16 @@
+<resources>
+    <dimen name="margin_top_large">80dp</dimen>
+    <dimen name="margin_top_normal">20dp</dimen>
+    <dimen name="margin_top_small">10dp</dimen>
+    <dimen name="text_size_large">18sp</dimen>
+    <dimen name="height_large">48dp</dimen>
+    <dimen name="padding_med">15dp</dimen>
+    <dimen name="margin_48">48dp</dimen>
+    <dimen name="margin_start">85dp</dimen>
+    <dimen name="margin_bottom_sml">10dp</dimen>
+    <dimen name="width_max">100dp</dimen>
+    <dimen name="height_max">100dp</dimen>
+    <dimen name="margin_end">32dp</dimen>
+    <dimen name="margin_end_36">36dp</dimen>
+    <dimen name="text_size">48sp</dimen>
+</resources>
