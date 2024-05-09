@@ -1,6 +1,10 @@
 package com.zybooks.bmicalculator
 
 import android.annotation.SuppressLint
+import android.hardware.Sensor
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
+import android.hardware.SensorEvent
 import android.view.animation.AnimationUtils
 import android.media.MediaPlayer
 import android.app.AlertDialog
@@ -17,27 +21,25 @@ import android.view.Menu
 import android.content.Context
 import android.content.ClipData
 import android.content.ClipboardManager
-import android.content.pm.PackageManager
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import android.view.animation.Animation
 import android.Manifest
 import android.content.Intent
-import android.location.Location
-import android.location.LocationManager
-import android.net.Uri
-import android.provider.Settings
+import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
 
 
-class MainActivity : AppCompatActivity() {
+
+class MainActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var weight: EditText
     private lateinit var height: EditText
     private lateinit var mediaPlayer: MediaPlayer
     private lateinit var scaleUpAnimation: Animation
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var sensorManager: SensorManager
+    private lateinit var accelerometer: Sensor
+    private lateinit var accelValuesTextView: TextView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,22 +59,6 @@ class MainActivity : AppCompatActivity() {
             replace(R.id.fragment_container, infoFragment)
             addToBackStack(null) // optional: allows back navigation
             commit()
-        }
-
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                LOCATION_PERMISSION_REQUEST_CODE
-            )
-        } else {
-            // Permission already granted, proceed to get user's location
-            getUserLocation()
         }
 
         mediaPlayer = MediaPlayer.create(this, R.raw.button_sound1) //load media player
@@ -110,7 +96,7 @@ class MainActivity : AppCompatActivity() {
                 bmi.text = bmiValue
                 bmiStatus.text = bmiStatusValue(weightValue / heightValue.pow(2))
                 bmiView.visibility = VISIBLE
-                bmiView.startAnimation(scaleUpAnimation) // Apply fade-in animation to BMI result view
+                bmiView.startAnimation(scaleUpAnimation) // Apply scale-up animation to BMI result view
                 calculateButton.visibility = GONE
             } else
                 Toast.makeText(this, "Please Input Weight and Height Values greater than 0", Toast.LENGTH_LONG).show()
@@ -125,59 +111,33 @@ class MainActivity : AppCompatActivity() {
         registerForContextMenu(weight)
         registerForContextMenu(height)
 
+        sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)!!
+        accelValuesTextView = findViewById(R.id.acceleration_values_text_view)
+
     }
 
-    fun openMaps(view: View) {
-        getUserLocation()
-    }
-    private fun getUserLocation() {
-        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            // Location services disabled, prompt user to enable
-            Toast.makeText(
-                this,
-                "Please enable location services",
-                Toast.LENGTH_SHORT
-            ).show()
-            startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
-            return
-        }
+    override fun onSensorChanged(event: SensorEvent) {
 
-        // Check if location permission is granted
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            // Permission granted, get last known location
-            fusedLocationClient.lastLocation
-                .addOnSuccessListener { location: Location? ->
-                    location?.let {
-                        // Location found, construct Google Maps URL
-                        val googleMapsUrl = "https://www.google.com/maps/search/?api=1&query=${it.latitude},${it.longitude}"
-                        // Open Google Maps with the specified location
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(googleMapsUrl))
-                        startActivity(intent)
-                    } ?: run {
-                        Toast.makeText(this, "Location not available", Toast.LENGTH_SHORT).show()
-                    }
-                }
-                .addOnFailureListener { e ->
-                    Toast.makeText(this, "Failed to get location: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
-        } else {
-            // Permission not granted, request the permission
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                LOCATION_PERMISSION_REQUEST_CODE
-            )
-        }
-    }
-    companion object {
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 1001
+        // Display values in the UI
+        val newline = System.getProperty("line.separator")
+        val message = "${event.values[0]}$newline${event.values[1]}$newline${event.values[2]}"
+        accelValuesTextView.text = message;
     }
 
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+        // Nothing to do
+    }
+
+    override fun onResume() {
+        super.onResume()
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        sensorManager.unregisterListener(this, accelerometer)
+    }
 
     private fun bmiStatusValue(bmi: Double): String {
         lateinit var bmiStatus: String

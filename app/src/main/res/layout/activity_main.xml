@@ -147,22 +147,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:layout_marginStart="75dp"
+                android:layout_marginStart="68dp"
                 android:gravity="center_horizontal"
                 android:text="@string/calculate_bmi_again"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/blue"
                 android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/open_maps_button"
+
+            <TextView
+                android:id="@+id/acceleration_values_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="@string/maps"
-                android:onClick="openMaps" />
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="75dp"
+                android:text="@string/acc"
+                android:textSize="16sp" />
 
         </LinearLayout>
+
 
     </RelativeLayout>
 </ScrollView>
