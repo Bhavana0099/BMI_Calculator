@@ -23,6 +23,7 @@
     <string name="info5">Obesity: 30.0 and above</string>
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>
+    <string name="maps">Open Maps with Current Location</string>
 
     <!-- Messages Preferences -->
     <string name="signature_title">Your signature</string>
